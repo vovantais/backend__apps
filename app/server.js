@@ -1,9 +1,11 @@
 import express from 'express';
+import authRoute from './routers/auth';
 import mongoose from 'mongoose';
 import { PORT, CONNECT_MONGODB } from './consts/consts';
 
+const app = express();
 
-export const app = express();
+app.use(authRoute);
 
 const start = async () => {
 	try {
