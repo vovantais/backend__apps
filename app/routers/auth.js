@@ -16,7 +16,7 @@ authRoute.use(cors({
 
 authRoute.use(bodyParser.json());
 
-authRoute.route('/Signin')
+authRoute.route('/Login')
 	.post(async (req, res) => {
 		const { email, pwdHash } = req.body;
 		const user = await Users.findOne({ email });
@@ -35,13 +35,13 @@ authRoute.route('/Signin')
 					{
 						expiresIn: '1d',
 					})
-				res.status(200).json({ token: user.token, messege: 'You sign in successfully!' })
+				res.status(200).json({ token: user.token, messege: 'You Log in successfully!' })
 			}
-			res.status(200).json({ token: user.token, messege: 'You sign in successfully!' });
+			res.status(200).json({ token: user.token, messege: 'You Log in successfully!' });
 		})
 	})
 
-authRoute.route('/Login')
+authRoute.route('/registration')
 	.post(async (req, res) => {
 		const { email, password } = req.body;
 		const newUser = await Users.findOne({ email });
@@ -58,7 +58,7 @@ authRoute.route('/Login')
 			})
 		})
 		await createUser.save()
-			.then(() => res.status(200).json('Your Log in successfully'))
+			.then(() => res.status(200).json('Your sign in successfully'))
 			.catch(({ message }) => {
 				res.status(403).json(message);
 			});
