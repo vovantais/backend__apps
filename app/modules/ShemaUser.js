@@ -21,5 +21,8 @@ const ShemaUser = new Schema({
 	token: {
 		type: String,
 	},
+	accessKey: {
+		type: String,
+	},
 });
 export default model("Users", ShemaUser);

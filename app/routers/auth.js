@@ -18,14 +18,18 @@ authRoute.use(bodyParser.json());
 
 authRoute.route('/Login')
 	.post(async (req, res) => {
-		const { email, pwdHash } = req.body;
+		const { email, pwdHash, accessKey } = req.body;
 		const user = await Users.findOne({ email });
 		if (!user) {
-			return res.status(404).json('This user was not found!');
+			return res.status(404).json({ message: { text: 'This user was not found!', success: false } });
 		}
 		const password = await bcrypt.compareSync(req.body.password, user.pwdHash);
 		if (!password) {
-			return res.status(401).json('This password is not correct!');
+			return res.status(401).json({ message: { text: 'This password is not correct!', success: false } });
+		}
+		const key = await Users.findOne({ accessKey });
+		if (!key) {
+			return res.status(500).json({ message: { text: 'This access key is invalid!', success: false } });
 		}
 		await jwt.verify(user.token, SECRET_WORD, (err, decoded) => {
 			if (err) {
@@ -35,9 +39,9 @@ authRoute.route('/Login')
 					{
 						expiresIn: '1d',
 					})
-				res.status(200).json({ token: user.token, messege: 'You Log in successfully!' })
+				res.status(200).json({ token: user.token, message: { text: 'You Log in successfully!', success: true } })
 			}
-			res.status(200).json({ token: user.token, messege: 'You Log in successfully!' });
+			res.status(200).json({ token: user.token, message: { text: 'You Log in successfully!', success: true } });
 		})
 	})
 
@@ -45,6 +49,7 @@ authRoute.route('/registration')
 	.post(async (req, res) => {
 		const { email, password } = req.body;
 		const newUser = await Users.findOne({ email });
+		const key = Math.floor(Math.random() * 3345);
 		if (newUser) {
 			return res.status(403).json({ message: { text: 'This email address is already registered!', success: false } });
 
@@ -56,10 +61,15 @@ authRoute.route('/registration')
 				userEmail: email,
 			}, SECRET_WORD, {
 				expiresIn: '1d',
-			})
+			}),
+			accessKey: key,
 		})
 		await createUser.save()
-			.then(() => res.status(200).json({ message: { text: 'Your sign in successfully!', success: true } }))
+			.then(() => res.status(200).json({
+				message: {
+					text: 'Your sign in successfully! We have sent you an access key to your email address!', success: true
+				}
+			}))
 			.catch(({ message }) => {
 				console.log(message);
 				res.status(403).json({ message: { text: message, success: false } });
