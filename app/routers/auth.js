@@ -46,7 +46,8 @@ authRoute.route('/registration')
 		const { email, password } = req.body;
 		const newUser = await Users.findOne({ email });
 		if (newUser) {
-			return res.status(403).json('This email address is already registered!');
+			return res.status(403).json({ message: { text: 'This email address is already registered!', success: false } });
+
 		}
 		const createUser = new Users({
 			email,
@@ -58,9 +59,10 @@ authRoute.route('/registration')
 			})
 		})
 		await createUser.save()
-			.then(() => res.status(200).json('Your sign in successfully'))
+			.then(() => res.status(200).json({ message: { text: 'Your sign in successfully!', success: true } }))
 			.catch(({ message }) => {
-				res.status(403).json(message);
+				console.log(message);
+				res.status(403).json({ message: { text: message, success: false } });
 			});
 	});
 
