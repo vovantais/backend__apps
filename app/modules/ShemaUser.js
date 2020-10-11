@@ -21,8 +21,9 @@ const ShemaUser = new Schema({
 	token: {
 		type: String,
 	},
-	accessKey: {
-		type: String,
+	verified: {
+		type: Boolean,
+		default: false,
 	},
 });
 export default model("Users", ShemaUser);

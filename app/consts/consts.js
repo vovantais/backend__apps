@@ -8,3 +8,11 @@ export const LOCAL_HOST = 'http://localhost:3000';
 export const SECRET_WORD = "SECRET";
 
 export const SALT_ROUNDS = 10;
+
+export const HOST_MAIL_ADRESS = 'smtp.mail.ru';
+
+export const USER_EMAIL_ADRESS = 'vovantais@mail.ru';
+
+export const USER_PASSWORD_EMAIL = 'vladimir02021997';
+
+export const USER_NIK_NAME_TO_SEND_MESSAGE = 'Sender Messages';
