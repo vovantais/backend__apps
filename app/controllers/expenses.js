@@ -3,16 +3,17 @@ import Expenses from '../modules/ShemaExpensess';
 export const getExpenses = async (req, res, next) => {
 	let Message;
 	await Expenses.find({})
-		.then(res => {
-			Message = res;
+		.then(async result => {
+			Message = result;
+			await res.status(200).json(Message);
 		})
-		.catch(err => {
+		.catch(async err => {
 			Message = {
 				message: err.message,
 				type: 'Erorr',
 			}
+			await res.status(500).json(Message);
 		});
-	await res.json(Message);
 }
 export const postExpenses = async (req, res, next) => {
 	let Message;
@@ -23,18 +24,18 @@ export const postExpenses = async (req, res, next) => {
 		dateTimeExpenses: req.body.dateTimeExpenses,
 		descriptionExpenses: req.body.descriptionExpenses,
 	})
-		.then(res => {
+		.then(async result => {
 			Message = {
 				message: 'Income added successfully!',
 				type: 'Success',
 			}
+			await res.status(200).json(Message);
 		})
-		.catch(err => {
-			res.status(500);
+		.catch(async err => {
 			Message = {
 				message: 'Error happend during creating income! ' + err.message,
 				type: 'Erorr',
 			}
+			await res.status(500).json(Message);
 		});
-	await res.json(Message);
 }

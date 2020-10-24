@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const expensesSchema = new Schema({
 	sumSpent: {
-		type: Number,
+		type: String,
 		required: true,
 		min: 1,
 		max: 10,
@@ -15,7 +15,7 @@ const expensesSchema = new Schema({
 		type: String,
 	},
 	dateTimeExpenses: {
-		type: Date,
+		type: String,
 	},
 	descriptionExpenses: {
 		type: String,
