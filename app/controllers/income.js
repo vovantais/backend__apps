@@ -17,7 +17,6 @@ export const getIncome = async (req, res, next) => {
 }
 export const postIncome = async (req, res, next) => {
 	let Message;
-	console.log(req.body);
 	await Income.create({
 		sumIncome: req.body.sumIncome,
 		dateTimeIncome: req.body.dateTimeIncome,

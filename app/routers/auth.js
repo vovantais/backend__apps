@@ -17,7 +17,7 @@ authRoute.use(cors({
 
 authRoute.use(bodyParser.json());
 
-authRoute.route('/Login')
+authRoute.route('/login')
 	.post(async (req, res) => {
 		const { email, pwdHash } = req.body;
 		const user = await Users.findOne({ email });
@@ -39,21 +39,22 @@ authRoute.route('/Login')
 					{
 						expiresIn: '1d',
 					})
-				res.status(200).json({ token: user.token, message: { text: 'You Log in successfully!', success: true } })
+				res.status(200).json({ token: user.token, userName: user.userName, message: { text: 'You Log in successfully!', success: true } })
 			}
-			res.status(200).json({ token: user.token, message: { text: 'You Log in successfully!', success: true } });
+			res.status(200).json({ token: user.token, userName: user.userName, message: { text: 'You Log in successfully!', success: true } });
 		})
 	})
 
 authRoute.route('/registration')
 	.post(async (req, res) => {
-		const { email, password } = req.body;
+		const { userName, email, password } = req.body;
 		const key = Math.random().toString(36).substring(7);
+		console.log(req.body);
 		const messageToEmail = {
 			to: req.body.email,
 			subject: 'Сongratulations!',
 			html: `
-			<h2> Congratulations, you have successfully registered in the FBS application!</h2>
+			<h2> Congratulations ${req.body.userName}, you have successfully registered in the FBS application!</h2>
 
 			<i>Your account details:</i>
 			
@@ -71,6 +72,7 @@ authRoute.route('/registration')
 					return res.status(403).json({ message: { text: 'This email address is already registered!', success: false } });
 				}
 				const createUser = new Users({
+					userName,
 					email,
 					pwdHash: bcrypt.hashSync(password, SALT_ROUNDS),
 					token: jwt.sign({
@@ -92,9 +94,6 @@ authRoute.route('/registration')
 			.catch(({ message }) => {
 				res.status(404).json({ message: { text: 'This email does not exist!', success: false } });
 			})
-			.catch(({ message }) => {
-				res.status(403).json({ message: { text: message, success: false } });
-			});
 	});
 
 authRoute.route('/registration/verify')

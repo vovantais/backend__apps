@@ -17,7 +17,6 @@ export const getExpenses = async (req, res, next) => {
 }
 export const postExpenses = async (req, res, next) => {
 	let Message;
-	console.log(req.body);
 	await Expenses.create({
 		sumSpent: req.body.sumSpent,
 		category: req.body.category,
