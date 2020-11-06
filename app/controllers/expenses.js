@@ -1,22 +1,22 @@
 import Expenses from '../modules/ShemaExpensess';
 
 export const getExpenses = async (req, res, next) => {
-	let Message;
+	let message;
 	await Expenses.find({})
 		.then(async result => {
-			Message = result;
-			await res.status(200).json(Message);
+			message = result;
+			await res.status(200).json(message);
 		})
 		.catch(async err => {
-			Message = {
+			message = {
 				message: err.message,
-				type: 'Erorr',
+				type: false,
 			}
-			await res.status(500).json(Message);
+			await res.status(500).json(message);
 		});
 }
 export const postExpenses = async (req, res, next) => {
-	let Message;
+	let message;
 	await Expenses.create({
 		sumSpent: req.body.sumSpent,
 		category: req.body.category,
@@ -24,17 +24,38 @@ export const postExpenses = async (req, res, next) => {
 		descriptionExpenses: req.body.descriptionExpenses,
 	})
 		.then(async result => {
-			Message = {
-				message: 'Income added successfully!',
-				type: 'Success',
+			message = {
+				message: 'Expenses added successfully!',
+				type: true,
 			}
-			await res.status(200).json(Message);
+			await res.status(200).json(message);
 		})
 		.catch(async err => {
-			Message = {
-				message: 'Error happend during creating income! ' + err.message,
-				type: 'Erorr',
+			message = {
+				message: 'Error happend during creating expenses!',
+				type: false,
 			}
-			await res.status(500).json(Message);
+			await res.status(500).json(message);
+		});
+}
+
+export const deleteExpenses = async (req, res, next) => {
+	let message;
+	console.log(req.body);
+	await Expenses.findByIdAndDelete(req.body.id)
+		.then(async del => {
+			message = {
+				message: 'Expenses deleted successfully!',
+				type: false,
+				deleteId: del._id,
+			}
+			await res.status(200).json(message);
+		})
+		.catch(async err => {
+			message = {
+				message: 'Error happend during deleting!',
+				type: false,
+			}
+			await res.status(500).json(message);
 		});
 }

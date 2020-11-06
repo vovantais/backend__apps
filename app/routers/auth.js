@@ -13,6 +13,7 @@ const authRoute = express.Router();
 authRoute.use(cors({
 	origin: LOCAL_HOST,
 	optionSuccessStatus: 200,
+	exposedHeaders: ['Authorization'],
 }));
 
 authRoute.use(bodyParser.json());
@@ -98,8 +99,12 @@ authRoute.route('/registration')
 
 authRoute.route('/registration/verify')
 	.post(async (req, res) => {
+		console.log(req.body);
 		const { email, accessKey } = req.body;
 		const user = await Users.findOne({ email });
+		if (user.verified) {
+			return res.status(200).json({ message: { text: 'This user is already verified!', success: true } });
+		}
 		if (!user) {
 			return res.status(404).json({ message: { text: 'This user was not found!', success: false } });
 		}

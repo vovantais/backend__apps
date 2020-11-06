@@ -1,39 +1,59 @@
 import Income from '../modules/ShemaIncome';
 
 export const getIncome = async (req, res, next) => {
-	let Message;
+	let message;
 	await Income.find({})
 		.then(async result => {
-			Message = result;
-			await res.status(200).json(Message);
+			message = result;
+			await res.status(200).json(message);
 		})
 		.catch(async err => {
-			Message = {
+			message = {
 				message: err.message,
-				type: 'Erorr',
+				type: false,
 			}
-			await res.status(500).json(Message);
+			await res.status(500).json(message);
 		});
 }
 export const postIncome = async (req, res, next) => {
-	let Message;
+	let message;
 	await Income.create({
 		sumIncome: req.body.sumIncome,
 		dateTimeIncome: req.body.dateTimeIncome,
 		descriptionIncome: req.body.descriptionIncome,
 	})
 		.then(async result => {
-			Message = {
+			message = {
 				message: 'Income added successfully!',
-				type: 'Success',
+				type: true,
 			}
-			await res.status(200).json(Message);
+			await res.status(200).json(message);
 		})
 		.catch(async err => {
-			Message = {
-				message: 'Error happend during creating income! ' + err.message,
-				type: 'Erorr',
+			message = {
+				message: 'Error happend during creating income!',
+				type: false,
 			}
-			await res.status(500).json(Message);
+			await res.status(500).json(message);
 		});
 }
+
+export const deleteIncome = async (req, res, next) => {
+	let message;
+	await Income.findByIdAndDelete(req.body.id)
+		.then(toDelete => {
+			message = {
+				message: 'Deleted successfully!',
+				type: true,
+				deletedId: toDelete._id,
+			};
+			res.status(200).json(message);
+		})
+		.catch(err => {
+			message = {
+				message: 'Error happend during deleting!',
+				type: false,
+			};
+			res.status(500).json(message);
+		});
+};
