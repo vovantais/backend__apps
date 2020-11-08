@@ -18,6 +18,7 @@ const start = async () => {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 			useCreateIndex: true,
+			useFindAndModify: false,
 		});
 		app.listen(PORT, () => console.log('Server Listen on Port 7000!'));
 	} catch (e) {

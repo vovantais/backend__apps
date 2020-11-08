@@ -36,6 +36,7 @@ authRoute.route('/login')
 			if (err) {
 				jwt.sign({
 					userEmail: email,
+					userId: user.id,
 				}, SECRET_WORD,
 					{
 						expiresIn: '1d',
@@ -48,9 +49,8 @@ authRoute.route('/login')
 
 authRoute.route('/registration')
 	.post(async (req, res) => {
-		const { userName, email, password } = req.body;
+		const { userName, email, password, id } = req.body;
 		const key = Math.random().toString(36).substring(7);
-		console.log(req.body);
 		const messageToEmail = {
 			to: req.body.email,
 			subject: 'Сongratulations!',
@@ -76,11 +76,6 @@ authRoute.route('/registration')
 					userName,
 					email,
 					pwdHash: bcrypt.hashSync(password, SALT_ROUNDS),
-					token: jwt.sign({
-						userEmail: email,
-					}, SECRET_WORD, {
-						expiresIn: '1d',
-					}),
 				})
 				const verify = new VerifyUser({
 					email,

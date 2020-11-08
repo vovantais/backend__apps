@@ -21,8 +21,8 @@ const expensesSchema = new Schema({
 		type: String,
 		required: true,
 		validate: {
-			validator: str => (str.length > 5),
-			message: "This description must be more 5 symbols!",
+			validator: str => (str.length > 3),
+			message: "This description must be more 3 symbols!",
 		}
 	}
 })

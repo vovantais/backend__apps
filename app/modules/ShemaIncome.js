@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import Types, { Schema, model } from "mongoose";
 
 const incomeSchema = new Schema({
 	sumIncome: {
@@ -18,9 +18,13 @@ const incomeSchema = new Schema({
 		type: String,
 		required: true,
 		validate: {
-			validator: str => (str.length > 5),
-			message: "This description must be more 5 symbols!",
+			validator: str => (str.length > 3),
+			message: "This description must be more 3 symbols!",
 		}
+	},
+	owner: {
+		type: Types.ObjectId,
+		ref: 'Users',
 	}
 })
 export default model('Income', incomeSchema);
