@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { LOCAL_HOST } from '../consts/consts';
 import auth from '../middleWare/authMiddlWare';
+
 const incomeRouter = express.Router();
 
 incomeRouter.use(cors({

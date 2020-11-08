@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import Types, { Schema, model } from "mongoose";
 
 const expensesSchema = new Schema({
 	sumSpent: {
@@ -24,6 +24,10 @@ const expensesSchema = new Schema({
 			validator: str => (str.length > 3),
 			message: "This description must be more 3 symbols!",
 		}
+	},
+	owner: {
+		type: Types.ObjectId,
+		ref: 'Users',
 	}
 })
 export default model('Expenses', expensesSchema);

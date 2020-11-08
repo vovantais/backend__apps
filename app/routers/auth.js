@@ -32,24 +32,19 @@ authRoute.route('/login')
 		if (!user.verified) {
 			return res.status(500).json({ message: { text: 'This user not verified!', success: false } });
 		}
-		await jwt.verify(user.token, SECRET_WORD, (err, decoded) => {
-			if (err) {
-				jwt.sign({
-					userEmail: email,
-					userId: user.id,
-				}, SECRET_WORD,
-					{
-						expiresIn: '1d',
-					})
-				res.status(200).json({ token: user.token, userName: user.userName, message: { text: 'You Log in successfully!', success: true } })
-			}
-			res.status(200).json({ token: user.token, userName: user.userName, message: { text: 'You Log in successfully!', success: true } });
-		})
+		const token = await jwt.sign({
+			userEmail: email,
+			userId: user.id,
+		}, SECRET_WORD,
+			{
+				expiresIn: '1d',
+			})
+		res.status(200).json({ token, userName: user.userName, city: user.city, message: { text: 'You Log in successfully!', success: true } })
 	})
 
 authRoute.route('/registration')
 	.post(async (req, res) => {
-		const { userName, email, password, id } = req.body;
+		const { userName, email, password, city } = req.body;
 		const key = Math.random().toString(36).substring(7);
 		const messageToEmail = {
 			to: req.body.email,
@@ -75,7 +70,14 @@ authRoute.route('/registration')
 				const createUser = new Users({
 					userName,
 					email,
+					city,
 					pwdHash: bcrypt.hashSync(password, SALT_ROUNDS),
+					// todo logik
+					// token: jwt.sign({
+					// 	userEmail: email,
+					// }, SECRET_WORD, {
+					// 	expiresIn: '1d',
+					// }),
 				})
 				const verify = new VerifyUser({
 					email,
@@ -94,7 +96,6 @@ authRoute.route('/registration')
 
 authRoute.route('/registration/verify')
 	.post(async (req, res) => {
-		console.log(req.body);
 		const { email, accessKey } = req.body;
 		const user = await Users.findOne({ email });
 		if (user.verified) {

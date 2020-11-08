@@ -18,6 +18,14 @@ const ShemaUser = new Schema({
 			message: ' Email  must be more then 8 symbols and contain @ ',
 		}
 	},
+	city: {
+		type: String,
+		required: true,
+		validate: {
+			validator: str => (str.length >= 3 && typeof str === 'string'),
+			message: 'City must be more then 3 letters!',
+		}
+	},
 	pwdHash: {
 		type: String,
 		required: [true, 'Password is required.'],

@@ -1,8 +1,10 @@
 import Expenses from '../modules/ShemaExpensess';
 
+// todo Добавить создание токена если старый токен сдох
+
 export const getExpenses = async (req, res) => {
 	let message;
-	await Expenses.find({})
+	await Expenses.find({ owner: req.user.userId })
 		.then(result => {
 			message = result;
 			res.status(200).json(message);
@@ -22,6 +24,7 @@ export const postExpenses = async (req, res) => {
 		category: req.body.category,
 		dateTimeExpenses: req.body.dateTimeExpenses,
 		descriptionExpenses: req.body.descriptionExpenses,
+		owner: req.user.userId,
 	})
 		.then(result => {
 			message = {

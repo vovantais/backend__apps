@@ -9,6 +9,7 @@ import Income from '../modules/ShemaIncome';
 // 	{
 // 		expiresIn: '1d',
 // 	})
+// todo Добавить создание токена если старый токен сдох
 
 export const getIncome = async (req, res) => {
 	let message;
@@ -32,6 +33,7 @@ export const postIncome = async (req, res) => {
 		sumIncome: req.body.sumIncome,
 		dateTimeIncome: req.body.dateTimeIncome,
 		descriptionIncome: req.body.descriptionIncome,
+		owner: req.user.userId,
 	})
 		.then(result => {
 			message = {
