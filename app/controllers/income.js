@@ -1,16 +1,5 @@
 import Income from '../modules/ShemaIncome';
 
-// import { SALT_ROUNDS } from '../consts/consts';
-// import jwt from 'jsonwebtoken';
-// jwt.sign({
-// 	userEmail: email,
-// 	userId: user.id,
-// }, SECRET_WORD,
-// 	{
-// 		expiresIn: '1d',
-// 	})
-// todo Добавить создание токена если старый токен сдох
-
 export const getIncome = async (req, res) => {
 	let message;
 	await Income.find({ owner: req.user.userId })
@@ -40,7 +29,7 @@ export const postIncome = async (req, res) => {
 				message: 'Income added successfully!',
 				type: true,
 			}
-			res.status(200).json(message);
+			res.status(200).json({ result, message });
 		})
 		.catch(err => {
 			message = {

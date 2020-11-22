@@ -47,16 +47,16 @@ authRoute.route('/registration')
 		const { userName, email, password, city } = req.body;
 		const key = Math.random().toString(36).substring(7);
 		const messageToEmail = {
-			to: req.body.email,
+			to: email,
 			subject: 'Сongratulations!',
 			html: `
-			<h2> Congratulations ${req.body.userName}, you have successfully registered in the FBS application!</h2>
+			<h2> Congratulations ${userName}, you have successfully registered in the FBS application!</h2>
 
 			<i>Your account details:</i>
 			
 			<ul>
-				<li>Email: ${req.body.email}</li>
-				<li>Password : ${req.body.password}</li>
+				<li>Email: ${email}</li>
+				<li>Password : ${password}</li>
 				<li>Access key: ${key}</li>
 			</ul>
 			<p>This letter does not require a response.</p>`,
@@ -72,12 +72,6 @@ authRoute.route('/registration')
 					email,
 					city,
 					pwdHash: bcrypt.hashSync(password, SALT_ROUNDS),
-					// todo logik
-					// token: jwt.sign({
-					// 	userEmail: email,
-					// }, SECRET_WORD, {
-					// 	expiresIn: '1d',
-					// }),
 				})
 				const verify = new VerifyUser({
 					email,
@@ -112,6 +106,31 @@ authRoute.route('/registration/verify')
 		await user.save();
 		await VerifyUser.deleteOne({ email });
 		return res.status(200).json({ message: { text: 'You verified successfully!', success: true } });
+	});
+
+authRoute.route('/login/change')
+	.post(async (req, res) => {
+		const { email } = req.body;
+		const user = await Users.findOne({ email });
+		const newPassword = Math.random().toString(36).substring(2);
+		if (!user) {
+			return res.status(404).json({ message: { text: 'This user was not found!', success: false } });
+		}
+		const messageToEmail = {
+			to: email,
+			subject: 'Change password',
+			html: `
+			<h2>Hello, you have sent a request to change your password.</h2>
+			<i>Your account details:</i>
+			<ul>
+				<li> new password : ${newPassword}</li>
+			</ul>
+			<p>This letter does not require a response.</p>`,
+		}
+		transporter.sendMail(messageToEmail)
+		user.pwdHash = await bcrypt.hashSync(newPassword, SALT_ROUNDS);
+		await user.save();
+		return res.status(200).json({ message: { text: 'We have sent you  new password to your email address!', success: true } });
 	});
 
 export default authRoute;
