@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import authRoute from './routers/auth';
 import expensesRouter from './routers/expenses';
 import incomeRouter from './routers/income';
+import settingRoute from './routers/settings'
 import { PORT, CONNECT_MONGODB } from './consts/consts';
 
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 app.use(authRoute);
 app.use(incomeRouter);
 app.use(expensesRouter);
+app.use(settingRoute);
 
 
 const start = async () => {
