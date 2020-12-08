@@ -21,7 +21,7 @@ settingRoute.route('/city')
 		const { city } = req.body;
 		const user = await Users.findOne({ _id: req.user.userId });
 		if (!user) {
-			return res.status(404).json({ message: { mes: 'You don\'t have rights to change city', kind: false } })
+			return res.status(404).json({ message: { mes: 'You don\'t have rights to change city', kind: false } });
 		}
 		user.city = city;
 		await user.save();
@@ -33,12 +33,30 @@ settingRoute.route('/name')
 		const { name } = req.body;
 		const user = await Users.findOne({ _id: req.user.userId });
 		if (!user) {
-			return res.status(404).json({ message: { mes: 'You don\'t have rights to change name', kind: false } })
+			return res.status(404).json({ message: { mes: 'You don\'t have rights to change name', kind: false } });
 		}
 		user.userName = name;
 		await user.save();
 		return res.status(200).json({ name, message: { mes: 'You change name successfully!', kind: true } });
 	})
 
+
+settingRoute.route('/password')
+	.patch(async (req, res) => {
+		const { newPassword, password } = req.body;
+		const user = await Users.findOne({ _id: req.user.userId });
+		if (!user) {
+			return res.status(404).json({ message: { mes: 'You don\'t have rights to change password', kind: false } });
+		}
+		if (newPassword.length < 8) {
+			return res.status(401).json({ message: { mes: 'The password must be more than 8 symbols!', kind: false } });
+		}
+		if (!(bcrypt.compareSync(password, user.pwdHash))) {
+			return res.status(401).json({ message: { mes: 'This password is not the same!', kind: false } });
+		}
+		user.pwdHash = await bcrypt.hashSync(newPassword, SALT_ROUNDS);
+		await user.save();
+		return res.status(200).json({ message: { mes: 'You password change successfully!', kind: true } });
+	})
 
 export default settingRoute;
