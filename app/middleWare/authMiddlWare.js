@@ -16,24 +16,3 @@ export default async (req, res, next) => {
 		return res.status(401).json({ message: "No token provided!" });
 	}
 };
-
-	// if (!error) {
-	// 	req.user = { decode, token };
-	// 	next();
-	// }
-	// else if (error.name === 'TokenExpiredError') {
-	// 	console.log("decode", decode);
-	// 	const newToken = await sign({
-	// 		// userEmail: decode.userEmail,
-	// 		// userId: decode.userId,
-	// 	}, SECRET_WORD,
-	// 		{
-	// 			expiresIn: '1d',
-	// 		})
-	// 	console.log('newToken', newToken);
-	// 	req.user = { decode, newToken };
-	// 	next();
-	// }
-	// else {
-	// 	return res.status(401).json({ message: "Unauthorized access!" });
-	// }
