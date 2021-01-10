@@ -1,9 +1,9 @@
 
-export const PORT = 7000;
+export const PORT = process.env.port;
 
 export const CONNECT_MONGODB = 'mongodb+srv://Vladimir:vladimir02021997@cluster0.pp8d3.mongodb.net/petPtoject?retryWrites=true&w=majority';
 
-export const LOCAL_HOST = 'http://localhost:3000';
+export const LOCAL_HOST = '*';
 
 export const SECRET_WORD = "SECRET";
 

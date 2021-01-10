@@ -1,4 +1,4 @@
-import { verify, sign } from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
 import { SECRET_WORD } from '../consts/consts';
 
 

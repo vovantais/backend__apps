@@ -22,7 +22,7 @@ const start = async () => {
 			useCreateIndex: true,
 			useFindAndModify: false,
 		});
-		app.listen(PORT, () => console.log('Server Listen on Port 7000!'));
+		app.listen(PORT, () => console.log('Server Listen!'));
 	} catch (e) {
 		console.log("Server error", e.message);
 	}
