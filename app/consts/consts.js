@@ -1,5 +1,5 @@
 
-export const PORT = process.env.port;
+export const PORT =  process.env.PORT || 7000;
 
 export const CONNECT_MONGODB = 'mongodb+srv://Vladimir:vladimir02021997@cluster0.pp8d3.mongodb.net/petPtoject?retryWrites=true&w=majority';
 
